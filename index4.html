@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מפה אילמת - מילכה ברקו גרש</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 10px; direction: rtl; text-align: center; }
+        .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header h1 { font-size: 22px; color: #2e86c1; margin-bottom: 5px; }
+        .credit { font-size: 14px; color: #555; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: #e8f8f5; padding: 10px; border-radius: 8px; font-size: 16px; margin-bottom: 15px; border: 1px solid #a3e4d7; color: #16a085; font-weight: bold; }
+        
+        .organ-display { background: #3498db; color: white; padding: 20px; border-radius: 10px; margin-bottom: 15px; font-size: 28px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        .image-container img { width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd; }
+        .answer-area { margin-top: 15px; padding: 15px; background: #f4f6f7; border-radius: 10px; }
+        .number-input { width: 80px; height: 50px; font-size: 26px; text-align: center; border: 3px solid #3498db; border-radius: 8px; margin-bottom: 10px; outline: none; }
+        .btn-check { display: block; width: 100%; padding: 12px; background: #2e86c1; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-check:hover { background: #21618c; }
+        
+        .feedback { font-size: 18px; font-weight: bold; margin-top: 10px; min-height: 25px; }
+        #progress { font-size: 14px; color: #666; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>מפה אילמת: מערכת העיכול</h1>
+            <div class="credit">עריכה: מילכה ברקו גרש</div>
+        </header>
+        
+        <div class="instructions">זהו את האיבר בתרשים והקלידו את המספר שלו:</div>
+        
+        <div id="progress"></div>
+        <div id="organBox" class="organ-display">טוען...</div>
+        
+        <div class="image-container">
+            <img src="digestive_system.png" alt="תרשים מערכת העיכול">
+        </div>
+
+        <div class="answer-area" id="inputArea">
+            <input type="number" id="userGuess" class="number-input" placeholder="?" inputmode="numeric">
+            <button class="btn-check" onclick="checkAnswer()">בדיקה</button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        const organData = [
+            { id: 1, name: "לשון" },
+            { id: 2, name: "בלוטות רוק" },
+            { id: 3, name: "וושט" },
+            { id: 4, name: "כבד" },
+            { id: 5, name: "קיבה" },
+            { id: 6, name: "כיס מרה" },
+            { id: 7, name: "תריסריון" },
+            { id: 8, name: "לבלב" },
+            { id: 9, name: "מעי גס" },
+            { id: 10, name: "מעי דק" },
+            { id: 11, name: "תוספתן" },
+            { id: 12, name: "חלחולת" },
+            { id: 13, name: "פי טבעת" }
+        ];
+
+        let questions = [];
+        let index = 0;
+
+        function initGame() {
+            questions = [...organData].sort(() => Math.random() - 0.5);
+            render();
+        }
+
+        function render() {
+            if (index >= questions.length) {
+                document.getElementById('organBox').innerHTML = "כל הכבוד! סיימתם 🎉";
+                document.getElementById('organBox').style.background = "#27ae60";
+                document.getElementById('inputArea').style.display = 'none';
+                document.getElementById('progress').innerText = "";
+                return;
+            }
+            document.getElementById('organBox').innerText = questions[index].name;
+            document.getElementById('progress').innerText = "איבר " + (index + 1) + " מתוך " + questions.length;
+            document.getElementById('userGuess').value = "";
+            document.getElementById('feedback').innerText = "";
+            document.getElementById('userGuess').focus();
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('userGuess');
+            const val = parseInt(input.value);
+            const current = questions[index];
+            const feed = document.getElementById('feedback');
+
+            if (val === current.id) {
+                feed.innerHTML = "<span style='color:#27ae60'>✓ נכון מאוד!</span>";
+                index++;
+                setTimeout(render, 1000);
+            } else {
+                feed.innerHTML = "<span style='color:#e74c3c'>✗ לא מדויק, נסו שוב</span>";
+            }
+        }
+
+        document.getElementById('userGuess').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
