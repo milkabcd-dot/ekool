@@ -27,8 +27,8 @@
         </header>
         
         <div class="instructions">הביטו בתרשים והקלידו את המספר המתאים להסבר:</div>
-        <div id="progress"></div>
-        <div id="questionBox" class="question-box">טוען חידון...</div>
+        <div id="progress">טוען נתונים...</div>
+        <div id="questionBox" class="question-box">טוען שאלה...</div>
         
         <div class="image-container">
             <img src="digestive_system.png" alt="תרשים מערכת העיכול">
@@ -43,7 +43,7 @@
     </div>
 
     <script>
-        // הרשימה המדויקת שלך
+        // רשימת האיברים המעודכנת לפי העדכון האחרון שלך
         const data = [
             { id: 1, name: "לשון", q: "איבר שרירי העוזר בערבוב המזון, בליעה ודיבור." },
             { id: 2, name: "בלוטות רוק", q: "מפרישות נוזל המכיל אנזימים לפירוק ראשוני של פחמימות." },
@@ -51,10 +51,10 @@
             { id: 4, name: "כבד", q: "האיבר הפנימי הגדול ביותר; אוגר גליקוגן ומנטרל רעלים." },
             { id: 5, name: "קיבה", q: "איבר שרירי דמוי שק בו המזון מתערבב עם חומצה ואנזימים." },
             { id: 6, name: "כיס מרה", q: "אוגר את נוזל המרה המיוצר בכבד ומנטרל חומציות." },
-            { id: 7, name: "לבלב", q: "בלוטה המפרישה מיצי עיכול למעי הדק והורמונים כמו אינסולין." },
-            { id: 8, name: "תריסריון", q: "החלק הראשון של המעי הדק בו נמשך פירוק המזון." },
-            { id: 9, name: "מעי דק", q: "צינור ארוך בו נשלם פירוק המזון ונספגים חומרי המזון לדם." },
-            { id: 10, name: "מעי גס", q: "סופג מים ומלחים מהמזון הבלתי מעוכל ויוצר צואה." },
+            { id: 7, name: "תריסריון", q: "החלק הראשון של המעי הדק בו נמשך פירוק המזון." },
+            { id: 8, name: "לבלב", q: "בלוטה המפרישה מיצי עיכול למעי הדק והורמונים כמו אינסולין." },
+            { id: 9, name: "מעי גס", q: "סופג מים ומלחים מהמזון הבלתי מעוכל ויוצר צואה." },
+            { id: 10, name: "מעי דק", q: "צינור ארוך בו נשלם פירוק המזון ונספגים חומרי המזון לדם." },
             { id: 11, name: "תוספתן", q: "שלוחה קטנה בתחילת המעי הגס." },
             { id: 12, name: "חלחולת", q: "החלק הסופי של המעי הגס המשמש לאגירת הפסולת." },
             { id: 13, name: "פי טבעת", q: "הפתח החיצוני דרכו מופרשת הצואה מהגוף." }
@@ -64,25 +64,28 @@
         let index = 0;
 
         function startQuiz() {
-            // ערבוב השאלות
-            questions = data.sort(() => Math.random() - 0.5);
+            // ערבוב השאלות (ערבוביה)
+            questions = [...data].sort(() => Math.random() - 0.5);
             render();
         }
 
         function render() {
             if (index >= questions.length) {
-                document.getElementById('questionBox').innerHTML = "סיימתם בהצלחה! 🎉";
+                document.getElementById('questionBox').innerHTML = "סיימתם בהצלחה את כל 13 האיברים! 🎉";
                 document.getElementById('inputArea').style.display = 'none';
+                document.getElementById('progress').innerText = "";
                 return;
             }
             document.getElementById('questionBox').innerText = questions[index].q;
             document.getElementById('progress').innerText = "שאלה " + (index + 1) + " מתוך " + questions.length;
             document.getElementById('userGuess').value = "";
             document.getElementById('feedback').innerText = "";
+            document.getElementById('userGuess').focus();
         }
 
         function checkAnswer() {
-            const val = parseInt(document.getElementById('userGuess').value);
+            const input = document.getElementById('userGuess');
+            const val = parseInt(input.value);
             const current = questions[index];
             const feed = document.getElementById('feedback');
 
@@ -95,8 +98,17 @@
             }
         }
 
-        // הפעלה ברגע שהדף נטען
-        window.onload = startQuiz;
+        // האזנה למקש Enter
+        document.getElementById('userGuess').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkAnswer();
+        });
+
+        // הפעלה בטוחה
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', startQuiz);
+        } else {
+            startQuiz();
+        }
     </script>
 </body>
 </html>
