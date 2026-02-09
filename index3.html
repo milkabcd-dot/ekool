@@ -8,7 +8,7 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 10px; direction: rtl; text-align: center; }
         .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         header h1 { font-size: 20px; color: #1e8449; margin-bottom: 5px; }
-        .credit { font-size: 14px; color: #555; margin-bottom: 15px; }
+        .credit { font-size: 14px; color: #555; margin-bottom: 15px; font-weight: bold; }
         .instructions { background: #fff3cd; padding: 10px; border-radius: 8px; font-size: 15px; margin-bottom: 15px; border: 1px solid #ffeeba; font-weight: bold; }
         .question-box { background: #f5576c; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 17px; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; line-height: 1.4; }
         .image-container img { width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd; }
@@ -19,7 +19,7 @@
         .feedback { font-size: 17px; font-weight: bold; margin-top: 15px; min-height: 25px; }
         .correct { color: #28a745; }
         .wrong { color: #dc3545; }
-        #progress { font-size: 13px; color: #666; margin-top: 5px; margin-bottom: 10px; }
+        #progress { font-size: 13px; color: #666; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -42,72 +42,7 @@
 
     <script>
         const originalQuestions = [
-            { id: 1, name: "פה", q: "פתח לקליטת מזון ומים, בו מתחיל תהליך העיכול המכני והכימי." },
-            { id: 12, name: "לשון", q: "איבר שרירי בחלל הפה העוזר בערבוב המזון, בליעה ודיבור." },
-            { id: 2, name: "בלוטות רוק", q: "מפרישות נוזל המכיל אנזימים המתחילים את פירוק הפחמימות." },
-            { id: 3, name: "ושט", q: "צינור שרירי המעביר את המזון מחלל הפה אל הקיבה." },
-            { id: 4, name: "כבד", q: "האיבר הפנימי הגדול ביותר; מייצר מרה ומנטרל רעלים." },
-            { id: 6, name: "כיס מרה", q: "אוגר את נוזל המרה המיוצר בכבד ומפריש אותו למעי." },
-            { id: 5, name: "קיבה", q: "איבר שרירי דמוי שק בו המזון מתערבב עם חומצה ואנזימים." },
-            { id: 8, name: "לבלב", q: "בלוטה המפרישה מיצי עיכול למעי הדק והורמונים לדם." },
-            { id: 7, name: "תריסריון", q: "החלק הראשון של המעי הדק; בו מתבצע רוב הפירוק הכימי." },
-            { id: 11, name: "מעי דק", q: "צינור ארוך ומפותל בו נשלם פירוק המזון ונספגים חומרי המזון לדם." },
-            { id: 9, name: "מעי גס", q: "סופג מים ומלחים מהמזון הבלתי מעוכל ויוצר את הצואה." },
-            { id: 10, name: "חלחולת (רקטום)", q: "החלק הסופי של המעי הגס שבו נאגרת הצואה לפני הפרשתה." },
-            { id: 13, name: "פי טבעת", q: "הפתח דרכו מופרשת הצואה אל מחוץ לגוף." }
-        ];
-
-        let questions = [];
-        let currentQ = 0;
-
-        // פונקציה לערבוב מערך (Fisher-Yates Shuffle)
-        function shuffleQuestions(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function updateUI() {
-            if (currentQ >= questions.length) {
-                document.getElementById('questionBox').innerHTML = "כל הכבוד! סיימתם את כל 13 התחנות בערבוביה! 🎉";
-                document.getElementById('inputArea').style.display = 'none';
-                document.getElementById('progress').textContent = "";
-                return;
-            }
-            document.getElementById('questionBox').textContent = questions[currentQ].q;
-            document.getElementById('progress').textContent = `שאלה ${currentQ + 1} מתוך ${questions.length}`;
-            document.getElementById('userGuess').value = "";
-            document.getElementById('userGuess').focus();
-        }
-
-        function checkAnswer() {
-            const input = document.getElementById('userGuess');
-            const feedback = document.getElementById('feedback');
-            const guess = parseInt(input.value);
-            const correct = questions[currentQ];
-
-            if (guess === correct.id) {
-                feedback.innerHTML = `<span class="correct">✓ נכון! מספר ${guess} הוא ה${correct.name}</span>`;
-                currentQ++;
-                setTimeout(() => {
-                    feedback.textContent = "";
-                    updateUI();
-                }, 2000);
-            } else {
-                feedback.innerHTML = `<span class="wrong">✗ לא נכון, הביטו שוב בתרשים ונסו שוב.</span>`;
-            }
-        }
-
-        document.getElementById('userGuess').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') checkAnswer();
-        });
-
-        window.onload = function() {
-            questions = shuffleQuestions([...originalQuestions]); // יצירת עותק וערבוב
-            updateUI();
-        };
-    </script>
-</body>
-</html>
+            { id: 1, name: "לשון", q: "איבר שרירי העוזר בערבוב המזון, בליעה ודיבור." },
+            { id: 2, name: "בלוטות רוק", q: "מפרישות נוזל המכיל אנזימים לפירוק ראשוני של פחמימות." },
+            { id: 3, name: "וושט", q: "צינור שרירי המעביר את המזון אל הקיבה." },
+            { id: 4, name: "כ
