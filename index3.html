@@ -2,89 +2,116 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת העיכול - זיהוי לפי מספרים</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>מערכת העיכול - למידה אינטראקטיבית</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%); min-height: 100vh; padding: 20px; direction: rtl; }
-        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        header { background: #1e8449; color: white; padding: 15px; text-align: center; border-radius: 12px; margin-bottom: 20px; }
-        .instructions { background: #fff3cd; border: 2px solid #ffc107; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 18px; font-weight: bold; }
-        .question-box { background: #f5576c; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; font-size: 22px; font-weight: bold; min-height: 100px; display: flex; align-items: center; justify-content: center; }
-        .image-container { position: relative; width: 100%; }
-        .image-container img { width: 100%; height: auto; border-radius: 8px; display: block; }
-        .number-target { position: absolute; background: rgba(255, 255, 255, 0.1); border: 2px solid transparent; cursor: pointer; border-radius: 50%; transition: 0.3s; }
-        .number-target:hover { background: rgba(52, 152, 219, 0.4); border-color: white; }
-        .feedback { text-align: center; font-size: 24px; margin: 15px 0; padding: 15px; border-radius: 8px; display: none; font-weight: bold; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 10px; direction: rtl; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        header h1 { font-size: 20px; color: #1e8449; text-align: center; margin: 5px 0; }
+        .instructions { background: #fff3cd; padding: 6px; border-radius: 6px; font-size: 14px; text-align: center; margin-bottom: 10px; border: 1px solid #ffeeba; font-weight: bold; }
+        
+        .question-box { background: #f5576c; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-size: 16px; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        
+        .main-layout { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        
+        .image-container { position: relative; flex: 1; min-width: 300px; max-width: 500px; }
+        .image-container img { width: 100%; height: auto; display: block; border-radius: 8px; }
+
+        .number-target { 
+            position: absolute; background: rgba(135, 206, 250, 0.5); border: 2px solid #00bfff; 
+            border-radius: 50%; cursor: pointer; transform: translate(-50%, -50%);
+            width: 30px; height: 30px; transition: 0.2s;
+        }
+
+        .table-container { flex: 1; min-width: 250px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        .solved { background-color: #d4edda; font-weight: bold; color: #155724; }
+
+        .feedback { text-align: center; font-size: 18px; margin: 10px 0; padding: 10px; border-radius: 8px; display: none; font-weight: bold; }
         .correct-feed { background: #d4edda; color: #155724; display: block; }
         .incorrect-feed { background: #f8d7da; color: #721c24; display: block; }
+
+        @media (max-width: 600px) {
+            .main-layout { flex-direction: column; align-items: center; }
+            .number-target { width: 25px; height: 25px; }
+            header h1 { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>חידון מערכת העיכול</h1>
-            <p>עריכה: מילכה ברקו גרש</p>
-        </header>
-
-        <div class="instructions">
-            💡 הנחיה: לחצו על המספר המתאים בתמונה להסבר המשתנה בתיבה הורודה
-        </div>
-
-        <div id="scoreDisplay" style="text-align: center; font-weight: bold; margin-bottom: 10px;"></div>
-        <div class="question-box" id="questionText">טוען הסבר...</div>
+        <header><h1>מערכת העיכול - זיהוי איברים</h1></header>
+        <div class="instructions">לחצו על המספר המתאים להסבר בתיבה הורודה</div>
+        
+        <div class="question-box" id="questionText">טוען שאלה...</div>
         <div id="feedback" class="feedback"></div>
 
-        <div class="image-container" id="imageContainer">
-            <img src="digestive_system.png" alt="מפה אילמת מערכת העיכול">
+        <div class="main-layout">
+            <div class="image-container" id="imageContainer">
+                <img src="digestive_system.png" alt="מערכת העיכול">
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr><th>מספר</th><th>שם האיבר</th><th>סטטוס</th></tr>
+                    </thead>
+                    <tbody id="progressTable">
+                        </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        const questions = [
-            { id: "1", organ: "פה", q: "פתח לקליטת מזון ומים, בו מתחיל תהליך העיכול המכני והכימי." },
-            { id: "2", organ: "בלוטות רוק", q: "איבר בלוטי המפריש חומרים המכילים אנזימים לפירוק פחמימות." },
-            { id: "12", organ: "לשון", q: "איבר שרירי העוזר בערבוב המזון, בליעה ודיבור." },
-            { id: "3", organ: "ושט", q: "צינור שרירי המעביר מזון אל הקיבה דרך הצוואר, החזה והבטן." },
-            { id: "4", organ: "כבד", q: "האיבר הפנימי הגדול ביותר, מסנן דם, אוגר גליקוגן ומנטרל רעלים." },
-            { id: "6", organ: "כיס מרה", q: "אוגר את נוזל המרה ומנטרל חומציות לפני המעבר למעי." },
-            { id: "5", organ: "קיבה", q: "איבר דמוי שק המבצע פירוק ראשוני של חלבונים ושומנים ע\"י חומצה." },
-            { id: "7", organ: "תריסריון", q: "החלק הראשון של המעי הדק בו מתבצע פירוק כל אבות המזון." },
-            { id: "8", organ: "לבלב", q: "מפריש מיצי עיכול למעי והורמונים כמו אינסולין לדם." },
-            { id: "11", organ: "מעי דק", q: "האיבר בו מתבצע עיקר תהליך הספיגה של חומרי המזון." },
-            { id: "9", organ: "מעי גס", q: "סופג שאריות מים ומלחים ולוכד שאריות מזון." },
-            { id: "10", organ: "חלחולת", q: "החלק הסופי של המעי הגס המשמש לאגירת הפסולת." },
-            { id: "13", organ: "פי טבעת", q: "הפתח החיצוני המווסת את הפרשת הצואה מהגוף." }
+        const organs = [
+            { id: "1", name: "פה", q: "פתח לקליטת מזון ומים, בו מתחיל תהליך העיכול המכני והכימי." },
+            { id: "2", name: "בלוטות רוק", q: "מפרישות רוק המכיל אנזימים לפירוק ראשוני של פחמימות." },
+            { id: "3", name: "ושט", q: "צינור שרירי המעביר מזון אל הקיבה דרך הצוואר והחזה." },
+            { id: "4", name: "כבד", q: "האיבר הפנימי הגדול ביותר, מסנן דם ומנטרל רעלים." },
+            { id: "5", name: "קיבה", q: "איבר המבצע פירוק ראשוני של חלבונים ושומנים ע\"י חומצה." },
+            { id: "6", name: "כיס מרה", q: "אוגר את נוזל המרה ומנטרל חומציות לפני המעבר למעי." },
+            { id: "7", name: "תריסריון", q: "החלק הראשון של המעי הדק בו מתבצע פירוק כל אבות המזון." },
+            { id: "8", name: "לבלב", q: "מפריש מיצי עיכול למעי והורמונים כמו אינסולין לדם." },
+            { id: "9", name: "מעי גס", q: "סופג שאריות מים ומלחים ולוכד שאריות מזון." },
+            { id: "10", name: "חלחולת", q: "החלק הסופי של המעי הגס המשמש לאגירת הפסולת." },
+            { id: "11", name: "מעי דק", q: "האיבר בו מתבצע עיקר תהליך הספיגה של חומרי המזון." },
+            { id: "12", name: "לשון", q: "איבר שרירי העוזר בערבוב המזון ובבליעה." },
+            { id: "13", name: "פי טבעת", q: "הפתח החיצוני המווסת את הפרשת הצואה מהגוף." }
         ];
 
-        // מיקומי המספרים על גבי התמונה (באחוזים)
         const positions = {
-            "1": { left: "47%", top: "16%", w: "5%", h: "5%" },
-            "2": { left: "42%", top: "11%", w: "5%", h: "5%" },
-            "3": { left: "42%", top: "25%", w: "4%", h: "4%" },
-            "4": { left: "37%", top: "45%", w: "5%", h: "5%" },
-            "5": { left: "55%", top: "48%", w: "5%", h: "5%" },
-            "6": { left: "39%", top: "54%", w: "4%", h: "4%" },
-            "7": { left: "43%", top: "59%", w: "4%", h: "4%" },
-            "8": { left: "51%", top: "59%", w: "4%", h: "4%" },
-            "9": { left: "57%", top: "67%", w: "5%", h: "5%" },
-            "10": { left: "41%", top: "71%", w: "5%", h: "5%" },
-            "11": { left: "41%", top: "79%", w: "5%", h: "5%" },
-            "12": { left: "53%", top: "77%", w: "5%", h: "5%" },
-            "13": { left: "41%", top: "91%", w: "5%", h: "5%" }
+            "1": { x: "49%", y: "17%" }, "2": { x: "36%", y: "13%" }, "3": { x: "32%", y: "24%" },
+            "4": { x: "27%", y: "42%" }, "5": { x: "64%", y: "52%" }, "6": { x: "29%", y: "54%" },
+            "7": { x: "28%", y: "62%" }, "8": { x: "61%", y: "62%" }, "9": { x: "74%", y: "68%" },
+            "10": { x: "32%", y: "71%" }, "11": { x: "29%", y: "80%" }, "12": { x: "62%", y: "80%" },
+            "13": { x: "29%", y: "91%" }
         };
 
         let current = 0;
         let score = 0;
+        let solvedList = [];
 
         function init() {
+            // יצירת הטבלה
+            const tableBody = document.getElementById('progressTable');
+            organs.forEach(org => {
+                const row = document.createElement('tr');
+                row.id = `row-${org.id}`;
+                row.innerHTML = `<td>${org.id}</td><td>${org.name}</td><td id="status-${org.id}">-</td>`;
+                tableBody.appendChild(row);
+            });
+
+            // יצירת כפתורי המספרים
             const container = document.getElementById('imageContainer');
             for (let id in positions) {
                 const btn = document.createElement('div');
                 btn.className = 'number-target';
-                btn.style.left = positions[id].left;
-                btn.style.top = positions[id].top;
-                btn.style.width = positions[id].w;
-                btn.style.height = positions[id].h;
+                btn.style.left = positions[id].x;
+                btn.style.top = positions[id].y;
                 btn.onclick = () => check(id);
                 container.appendChild(btn);
             }
@@ -92,30 +119,33 @@
         }
 
         function show() {
-            if (current >= questions.length) {
-                document.getElementById('questionText').innerHTML = `🎉 סיימת! הציון: ${score}/${questions.length}`;
-                document.getElementById('feedback').style.display = 'none';
+            if (current >= organs.length) {
+                document.getElementById('questionText').innerHTML = `🎉 סיימת! כל הכבוד!`;
                 return;
             }
-            document.getElementById('questionText').textContent = questions[current].q;
-            document.getElementById('scoreDisplay').textContent = `שאלה ${current + 1} מתוך ${questions.length} | ציון: ${score}`;
+            document.getElementById('questionText').textContent = organs[current].q;
             document.getElementById('feedback').style.display = 'none';
         }
 
         function check(clickedId) {
             const feed = document.getElementById('feedback');
-            const correctObj = questions[current];
+            const correctOrg = organs[current];
 
-            if (clickedId === correctObj.id) {
-                score++;
-                feed.innerHTML = `✓ נכון! מספר ${clickedId} הוא ה**${correctObj.organ}**`;
+            if (clickedId === correctOrg.id) {
+                feed.innerHTML = `✓ נכון! מספר ${clickedId} הוא ה${correctOrg.name}`;
                 feed.className = "feedback correct-feed";
+                
+                // עדכון הטבלה
+                const row = document.getElementById(`row-${clickedId}`);
+                row.className = "solved";
+                document.getElementById(`status-${clickedId}`).textContent = "V";
+                
+                current++;
+                setTimeout(show, 2000);
             } else {
-                feed.innerHTML = `✗ טעות. זהו מספר ${clickedId}. התשובה הנכונה: מספר ${correctObj.id} (**${correctObj.organ}**)`;
+                feed.innerHTML = `✗ זהו מספר ${clickedId}. נסו שוב למצוא את המספר המתאים להסבר.`;
                 feed.className = "feedback incorrect-feed";
             }
-            current++;
-            setTimeout(show, 3000);
         }
 
         window.onload = init;
