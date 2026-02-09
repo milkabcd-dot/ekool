@@ -8,18 +8,15 @@
         body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 10px; direction: rtl; text-align: center; }
         .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         header h1 { font-size: 20px; color: #1e8449; margin-bottom: 5px; }
-        .credit { font-size: 14px; color: #555; margin-bottom: 15px; font-weight: bold; }
-        .instructions { background: #fff3cd; padding: 10px; border-radius: 8px; font-size: 15px; margin-bottom: 15px; border: 1px solid #ffeeba; font-weight: bold; }
-        .question-box { background: #f5576c; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 17px; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; line-height: 1.4; }
+        .credit { font-size: 14px; color: #555; margin-bottom: 10px; font-weight: bold; }
+        .instructions { background: #fff3cd; padding: 10px; border-radius: 8px; font-size: 14px; margin-bottom: 15px; border: 1px solid #ffeeba; }
+        .question-box { background: #f5576c; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 17px; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; }
         .image-container img { width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd; }
-        .answer-area { margin-top: 20px; padding: 15px; background: #e8f4fd; border-radius: 10px; }
-        .answer-label { display: block; margin-bottom: 8px; font-weight: bold; color: #185a9d; }
-        .number-input { width: 80px; height: 45px; font-size: 24px; text-align: center; border: 3px solid #185a9d; border-radius: 8px; margin-bottom: 10px; outline: none; }
+        .answer-area { margin-top: 15px; padding: 15px; background: #e8f4fd; border-radius: 10px; }
+        .number-input { width: 70px; height: 40px; font-size: 20px; text-align: center; border: 2px solid #185a9d; border-radius: 8px; margin-bottom: 10px; }
         .btn-check { display: block; width: 100%; padding: 12px; background: #1e8449; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .feedback { font-size: 17px; font-weight: bold; margin-top: 15px; min-height: 25px; }
-        .correct { color: #28a745; }
-        .wrong { color: #dc3545; }
-        #progress { font-size: 13px; color: #666; margin-bottom: 8px; }
+        .feedback { font-size: 17px; font-weight: bold; margin-top: 10px; min-height: 25px; }
+        #progress { font-size: 13px; color: #666; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -28,21 +25,78 @@
             <h1>חידון מערכת העיכול</h1>
             <div class="credit">עריכה: מילכה ברקו גרש</div>
         </header>
+        
         <div class="instructions">הביטו בתרשים והקלידו את המספר המתאים להסבר:</div>
         <div id="progress"></div>
-        <div id="questionBox" class="question-box">טוען שאלה...</div>
-        <div class="image-container"><img src="digestive_system.png" alt="תרשים מערכת העיכול"></div>
+        <div id="questionBox" class="question-box">טוען חידון...</div>
+        
+        <div class="image-container">
+            <img src="digestive_system.png" alt="תרשים מערכת העיכול">
+        </div>
+
         <div class="answer-area" id="inputArea">
-            <label class="answer-label">הקלידו את המספר כאן:</label>
             <input type="number" id="userGuess" class="number-input" placeholder="?" inputmode="numeric">
             <button class="btn-check" onclick="checkAnswer()">בדיקה</button>
         </div>
+
         <div id="feedback" class="feedback"></div>
     </div>
 
     <script>
-        const originalQuestions = [
+        // הרשימה המדויקת שלך
+        const data = [
             { id: 1, name: "לשון", q: "איבר שרירי העוזר בערבוב המזון, בליעה ודיבור." },
             { id: 2, name: "בלוטות רוק", q: "מפרישות נוזל המכיל אנזימים לפירוק ראשוני של פחמימות." },
             { id: 3, name: "וושט", q: "צינור שרירי המעביר את המזון אל הקיבה." },
-            { id: 4, name: "כ
+            { id: 4, name: "כבד", q: "האיבר הפנימי הגדול ביותר; אוגר גליקוגן ומנטרל רעלים." },
+            { id: 5, name: "קיבה", q: "איבר שרירי דמוי שק בו המזון מתערבב עם חומצה ואנזימים." },
+            { id: 6, name: "כיס מרה", q: "אוגר את נוזל המרה המיוצר בכבד ומנטרל חומציות." },
+            { id: 7, name: "לבלב", q: "בלוטה המפרישה מיצי עיכול למעי הדק והורמונים כמו אינסולין." },
+            { id: 8, name: "תריסריון", q: "החלק הראשון של המעי הדק בו נמשך פירוק המזון." },
+            { id: 9, name: "מעי דק", q: "צינור ארוך בו נשלם פירוק המזון ונספגים חומרי המזון לדם." },
+            { id: 10, name: "מעי גס", q: "סופג מים ומלחים מהמזון הבלתי מעוכל ויוצר צואה." },
+            { id: 11, name: "תוספתן", q: "שלוחה קטנה בתחילת המעי הגס." },
+            { id: 12, name: "חלחולת", q: "החלק הסופי של המעי הגס המשמש לאגירת הפסולת." },
+            { id: 13, name: "פי טבעת", q: "הפתח החיצוני דרכו מופרשת הצואה מהגוף." }
+        ];
+
+        let questions = [];
+        let index = 0;
+
+        function startQuiz() {
+            // ערבוב השאלות
+            questions = data.sort(() => Math.random() - 0.5);
+            render();
+        }
+
+        function render() {
+            if (index >= questions.length) {
+                document.getElementById('questionBox').innerHTML = "סיימתם בהצלחה! 🎉";
+                document.getElementById('inputArea').style.display = 'none';
+                return;
+            }
+            document.getElementById('questionBox').innerText = questions[index].q;
+            document.getElementById('progress').innerText = "שאלה " + (index + 1) + " מתוך " + questions.length;
+            document.getElementById('userGuess').value = "";
+            document.getElementById('feedback').innerText = "";
+        }
+
+        function checkAnswer() {
+            const val = parseInt(document.getElementById('userGuess').value);
+            const current = questions[index];
+            const feed = document.getElementById('feedback');
+
+            if (val === current.id) {
+                feed.innerHTML = "<span style='color:green'>נכון! " + current.id + " זה " + current.name + "</span>";
+                index++;
+                setTimeout(render, 1500);
+            } else {
+                feed.innerHTML = "<span style='color:red'>טעות, נסו שוב</span>";
+            }
+        }
+
+        // הפעלה ברגע שהדף נטען
+        window.onload = startQuiz;
+    </script>
+</body>
+</html>
