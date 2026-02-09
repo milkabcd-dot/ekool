@@ -6,92 +6,110 @@
     <title>מערכת העיכול - הקלדת מספרים</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 10px; direction: rtl; }
-        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        header h1 { font-size: 18px; color: #1e8449; text-align: center; margin-bottom: 5px; }
-        .instructions { background: #fff3cd; padding: 10px; border-radius: 8px; font-size: 14px; text-align: center; margin-bottom: 15px; border: 1px solid #ffeeba; font-weight: bold; }
+        .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
-        .question-box { background: #f5576c; color: white; padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-size: 16px; font-weight: bold; }
+        header h1 { font-size: 18px; color: #1e8449; text-align: center; margin: 5px 0; }
+        .instructions { background: #fff3cd; padding: 8px; border-radius: 8px; font-size: 13px; text-align: center; margin-bottom: 10px; border: 1px solid #ffeeba; }
+        
+        .question-box { background: #f5576c; color: white; padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 10px; font-size: 15px; font-weight: bold; min-height: 40px; }
 
-        .image-wrapper { position: relative; width: 100%; margin: 0 auto; }
+        .image-wrapper { position: relative; width: 100%; }
         .image-wrapper img { width: 100%; height: auto; display: block; border-radius: 5px; }
 
-        /* תיבות להקלדת המספר */
+        /* תיבות ההקלדה - ממוקמות מעל המספרים */
         .number-input {
             position: absolute;
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             text-align: center;
             border: 2px solid #00bfff;
-            border-radius: 4px;
+            border-radius: 5px;
             font-weight: bold;
+            font-size: 16px;
             background: white;
-            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            -moz-appearance: textfield;
         }
-        .number-input.correct { background: #d4edda; border-color: #28a745; color: #155724; }
-        .number-input.wrong { background: #f8d7da; border-color: #dc3545; }
+        /* ביטול חיצי מספרים בתוך התיבה */
+        .number-input::-webkit-outer-spin-button, .number-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        .feedback { text-align: center; font-size: 16px; margin-top: 10px; font-weight: bold; min-height: 24px; }
-        .btn-check { display: block; width: 100%; padding: 10px; background: #185a9d; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .correct { background: #d4edda !important; border-color: #28a745 !important; color: #155724; }
+        
+        .feedback { text-align: center; font-size: 16px; font-weight: bold; height: 25px; margin: 10px 0; }
+        .btn-check { display: block; width: 100%; padding: 12px; background: #185a9d; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
         <header><h1>מערכת העיכול - התאמת מספרים</h1></header>
-        <div class="instructions">קראו את ההסבר בתיבה הורודה והקלידו את המספר המתאים לו בתיבה הכחולה הנכונה על התמונה</div>
+        <div class="instructions">קראו את ההסבר והקלידו את המספר המתאים לו בתיבה הכחולה הנכונה שעל התמונה</div>
         
         <div id="questionBox" class="question-box">טוען הסבר...</div>
-        
+        <div id="feedback" class="feedback"></div>
+
         <div class="image-wrapper">
             <img src="digestive_system.png" alt="מערכת העיכול">
             
-            <input type="number" id="in-1" class="number-input" style="left: 5%; top: 12%;"> <input type="number" id="in-12" class="number-input" style="right: 5%; top: 15%;"> <input type="number" id="in-3" class="number-input" style="left: 5%; top: 23%;"> <input type="number" id="in-4" class="number-input" style="left: 5%; top: 41%;"> <input type="number" id="in-5" class="number-input" style="right: 5%; top: 52%;"> <input type="number" id="in-6" class="number-input" style="left: 5%; top: 53%;"> <input type="number" id="in-7" class="number-input" style="left: 5%; top: 62%;"> <input type="number" id="in-8" class="number-input" style="right: 5%; top: 61%;"> <input type="number" id="in-9" class="number-input" style="right: 5%; top: 68%;"> <input type="number" id="in-11" class="number-input" style="left: 5%; top: 70%;"> <input type="number" id="in-14" class="number-input" style="left: 5%; top: 79%;"> <input type="number" id="in-10" class="number-input" style="right: 5%; top: 80%;"> <input type="number" id="in-13" class="number-input" style="left: 5%; top: 90%;"> </div>
+            <input type="number" id="box-1" class="number-input" style="left: 10%; top: 12%;">
+            <input type="number" id="box-2" class="number-input" style="left: 10%; top: 20%;">
+            <input type="number" id="box-3" class="number-input" style="left: 10%; top: 30%;">
+            <input type="number" id="box-4" class="number-input" style="left: 10%; top: 45%;">
+            <input type="number" id="box-5" class="number-input" style="right: 10%; top: 52%;">
+            <input type="number" id="box-6" class="number-input" style="left: 10%; top: 58%;">
+            <input type="number" id="box-7" class="number-input" style="left: 10%; top: 68%;">
+            <input type="number" id="box-8" class="number-input" style="right: 10%; top: 62%;">
+            <input type="number" id="box-9" class="number-input" style="right: 10%; top: 72%;">
+            <input type="number" id="box-10" class="number-input" style="right: 10%; top: 82%;">
+            <input type="number" id="box-11" class="number-input" style="left: 10%; top: 80%;">
+            <input type="number" id="box-12" class="number-input" style="right: 10%; top: 15%;">
+            <input type="number" id="box-13" class="number-input" style="left: 10%; top: 90%;">
+        </div>
 
-        <div id="feedback" class="feedback"></div>
         <button class="btn-check" onclick="checkAnswer()">בדיקה</button>
     </div>
 
     <script>
-        const tasks = [
-            { id: 1, name: "בלוטות רוק", q: "איבר המפריש נוזל המכיל אנזימים לפירוק פחמימות." },
+        const questions = [
+            { id: 1, name: "פה", q: "פתח לקליטת מזון ומים, בו מתחיל תהליך העיכול המכני והכימי." },
+            { id: 2, name: "בלוטות רוק", q: "איבר המפריש נוזל המכיל אנזימים לפירוק פחמימות." },
             { id: 12, name: "לשון", q: "איבר שרירי העוזר בערבוב המזון ובבליעה." },
             { id: 3, name: "ושט", q: "צינור שרירי המעביר מזון אל הקיבה." },
             { id: 4, name: "כבד", q: "האיבר הפנימי הגדול ביותר, אוגר גליקוגן ומנטרל רעלים." },
             { id: 5, name: "קיבה", q: "איבר המבצע פירוק ראשוני של חלבונים ושומנים ע\"י חומצה." },
-            { id: 13, name: "פי טבעת", q: "הפתח החיצוני המווסת את הפרשת הצואה מהגוף." }
+            { id: 13, name: "פי טבעת", q: "הפתח המווסת את הפרשת הצואה מהגוף." }
         ];
 
-        let currentTask = 0;
+        let currentQ = 0;
 
-        function showTask() {
-            if (currentTask >= tasks.length) {
-                document.getElementById('questionBox').innerHTML = "כל הכבוד! סיימתם את הפעילות 🎉";
+        function updateUI() {
+            if (currentQ >= questions.length) {
+                document.getElementById('questionBox').innerHTML = "כל הכבוד! סיימתם 🎉";
+                document.getElementById('feedback').textContent = "";
                 return;
             }
-            document.getElementById('questionBox').textContent = tasks[currentTask].q;
+            document.getElementById('questionBox').textContent = questions[currentQ].q;
             document.getElementById('feedback').textContent = "";
         }
 
         function checkAnswer() {
-            const activeTask = tasks[currentTask];
-            const inputField = document.getElementById('in-' + activeTask.id);
-            const val = inputField.value;
+            const current = questions[currentQ];
+            const input = document.getElementById('box-' + current.id);
+            const val = parseInt(input.value);
 
-            if (parseInt(val) === activeTask.id) {
-                inputField.classList.add('correct');
-                inputField.disabled = true;
+            if (val === current.id) {
+                input.classList.add('correct');
+                input.disabled = true;
                 document.getElementById('feedback').style.color = "green";
-                document.getElementById('feedback').textContent = "נכון! זהו ה" + activeTask.name;
-                currentTask++;
-                setTimeout(showTask, 2000);
+                document.getElementById('feedback').textContent = "נכון! זהו ה" + current.name;
+                currentQ++;
+                setTimeout(updateUI, 1500);
             } else {
                 document.getElementById('feedback').style.color = "red";
-                document.getElementById('feedback').textContent = "לא נכון, נסו שוב.";
-                inputField.classList.add('wrong');
-                setTimeout(() => inputField.classList.remove('wrong'), 500);
+                document.getElementById('feedback').textContent = "לא נכון, נסו שוב בתיבה המתאימה.";
             }
         }
 
-        window.onload = showTask;
+        window.onload = updateUI;
     </script>
 </body>
 </html>
