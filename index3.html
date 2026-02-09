@@ -3,69 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת העיכול - הקלדת מספרים</title>
+    <title>חידון מערכת העיכול - הקלדת מספר</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 10px; direction: rtl; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 10px; direction: rtl; text-align: center; }
         .container { max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         
-        header h1 { font-size: 18px; color: #1e8449; text-align: center; margin: 5px 0; }
-        .instructions { background: #fff3cd; padding: 8px; border-radius: 8px; font-size: 13px; text-align: center; margin-bottom: 10px; border: 1px solid #ffeeba; }
+        header h1 { font-size: 20px; color: #1e8449; margin-bottom: 10px; }
+        .instructions { background: #fff3cd; padding: 10px; border-radius: 8px; font-size: 15px; margin-bottom: 15px; border: 1px solid #ffeeba; font-weight: bold; }
         
-        .question-box { background: #f5576c; color: white; padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 10px; font-size: 15px; font-weight: bold; min-height: 40px; }
+        .question-box { background: #f5576c; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; font-size: 18px; font-weight: bold; min-height: 60px; display: flex; align-items: center; justify-content: center; }
 
-        .image-wrapper { position: relative; width: 100%; }
-        .image-wrapper img { width: 100%; height: auto; display: block; border-radius: 5px; }
+        .image-container img { width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd; }
 
-        /* תיבות ההקלדה - ממוקמות מעל המספרים */
+        .answer-area { margin-top: 20px; padding: 15px; background: #e8f4fd; border-radius: 10px; }
+        .answer-label { display: block; margin-bottom: 8px; font-weight: bold; color: #185a9d; }
+        
         .number-input {
-            position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 80px;
+            height: 45px;
+            font-size: 24px;
             text-align: center;
-            border: 2px solid #00bfff;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 16px;
-            background: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            -moz-appearance: textfield;
+            border: 3px solid #185a9d;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            outline: none;
         }
-        /* ביטול חיצי מספרים בתוך התיבה */
-        .number-input::-webkit-outer-spin-button, .number-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        .correct { background: #d4edda !important; border-color: #28a745 !important; color: #155724; }
-        
-        .feedback { text-align: center; font-size: 16px; font-weight: bold; height: 25px; margin: 10px 0; }
-        .btn-check { display: block; width: 100%; padding: 12px; background: #185a9d; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .btn-check { 
+            display: block; width: 100%; padding: 12px; background: #1e8449; color: white; 
+            border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; 
+        }
+        .btn-check:active { transform: scale(0.98); }
+
+        .feedback { font-size: 18px; font-weight: bold; margin-top: 15px; min-height: 25px; }
+        .correct { color: #28a745; }
+        .wrong { color: #dc3545; }
     </style>
 </head>
 <body>
     <div class="container">
-        <header><h1>מערכת העיכול - התאמת מספרים</h1></header>
-        <div class="instructions">קראו את ההסבר והקלידו את המספר המתאים לו בתיבה הכחולה הנכונה שעל התמונה</div>
+        <header><h1>מערכת העיכול</h1></header>
         
-        <div id="questionBox" class="question-box">טוען הסבר...</div>
-        <div id="feedback" class="feedback"></div>
-
-        <div class="image-wrapper">
-            <img src="digestive_system.png" alt="מערכת העיכול">
-            
-            <input type="number" id="box-1" class="number-input" style="left: 10%; top: 12%;">
-            <input type="number" id="box-2" class="number-input" style="left: 10%; top: 20%;">
-            <input type="number" id="box-3" class="number-input" style="left: 10%; top: 30%;">
-            <input type="number" id="box-4" class="number-input" style="left: 10%; top: 45%;">
-            <input type="number" id="box-5" class="number-input" style="right: 10%; top: 52%;">
-            <input type="number" id="box-6" class="number-input" style="left: 10%; top: 58%;">
-            <input type="number" id="box-7" class="number-input" style="left: 10%; top: 68%;">
-            <input type="number" id="box-8" class="number-input" style="right: 10%; top: 62%;">
-            <input type="number" id="box-9" class="number-input" style="right: 10%; top: 72%;">
-            <input type="number" id="box-10" class="number-input" style="right: 10%; top: 82%;">
-            <input type="number" id="box-11" class="number-input" style="left: 10%; top: 80%;">
-            <input type="number" id="box-12" class="number-input" style="right: 10%; top: 15%;">
-            <input type="number" id="box-13" class="number-input" style="left: 10%; top: 90%;">
+        <div class="instructions">הביטו בתרשים והקלידו את המספר המתאים להסבר:</div>
+        
+        <div id="questionBox" class="question-box">טוען שאלה...</div>
+        
+        <div class="image-container">
+            <img src="digestive_system.png" alt="תרשים מערכת העיכול">
         </div>
 
-        <button class="btn-check" onclick="checkAnswer()">בדיקה</button>
+        <div class="answer-area">
+            <label class="answer-label">הקלידו את המספר כאן:</label>
+            <input type="number" id="userGuess" class="number-input" placeholder="?">
+            <button class="btn-check" onclick="checkAnswer()">בדיקה</button>
+        </div>
+
+        <div id="feedback" class="feedback"></div>
     </div>
 
     <script>
@@ -76,38 +69,50 @@
             { id: 3, name: "ושט", q: "צינור שרירי המעביר מזון אל הקיבה." },
             { id: 4, name: "כבד", q: "האיבר הפנימי הגדול ביותר, אוגר גליקוגן ומנטרל רעלים." },
             { id: 5, name: "קיבה", q: "איבר המבצע פירוק ראשוני של חלבונים ושומנים ע\"י חומצה." },
-            { id: 13, name: "פי טבעת", q: "הפתח המווסת את הפרשת הצואה מהגוף." }
+            { id: 6, name: "כיס מרה", q: "אוגר את נוזל המרה ומנטרל חומציות לפני המעבר למעי." },
+            { id: 8, name: "לבלב", q: "מפריש מיצי עיכול למעי והורמונים כמו אינסולין לדם." },
+            { id: 11, name: "מעי דק", q: "האיבר בו מתבצע עיקר תהליך הספיגה של חומרי המזון." },
+            { id: 9, name: "מעי גס", q: "סופג שאריות מים ומלחים ולוכד שאריות מזון." },
+            { id: 13, name: "פי טבעת", q: "הפתח החיצוני המווסת את הפרשת הצואה מהגוף." }
         ];
 
         let currentQ = 0;
 
         function updateUI() {
             if (currentQ >= questions.length) {
-                document.getElementById('questionBox').innerHTML = "כל הכבוד! סיימתם 🎉";
-                document.getElementById('feedback').textContent = "";
+                document.getElementById('questionBox').innerHTML = "כל הכבוד! סיימתם את החידון 🎉";
+                document.querySelector('.answer-area').style.display = 'none';
                 return;
             }
             document.getElementById('questionBox').textContent = questions[currentQ].q;
-            document.getElementById('feedback').textContent = "";
+            document.getElementById('userGuess').value = "";
+            document.getElementById('userGuess').focus();
         }
 
         function checkAnswer() {
-            const current = questions[currentQ];
-            const input = document.getElementById('box-' + current.id);
-            const val = parseInt(input.value);
+            const input = document.getElementById('userGuess');
+            const feedback = document.getElementById('feedback');
+            const guess = parseInt(input.value);
+            const correct = questions[currentQ];
 
-            if (val === current.id) {
-                input.classList.add('correct');
-                input.disabled = true;
-                document.getElementById('feedback').style.color = "green";
-                document.getElementById('feedback').textContent = "נכון! זהו ה" + current.name;
+            if (guess === correct.id) {
+                feedback.innerHTML = `<span class="correct">✓ נכון! מספר ${guess} הוא ה${correct.name}</span>`;
                 currentQ++;
-                setTimeout(updateUI, 1500);
+                setTimeout(() => {
+                    feedback.textContent = "";
+                    updateUI();
+                }, 2000);
             } else {
-                document.getElementById('feedback').style.color = "red";
-                document.getElementById('feedback').textContent = "לא נכון, נסו שוב בתיבה המתאימה.";
+                feedback.innerHTML = `<span class="wrong">✗ לא נכון, נסו שוב.</span>`;
             }
         }
+
+        // תמיכה בלחיצה על Enter במקלדת
+        document.getElementById('userGuess').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
 
         window.onload = updateUI;
     </script>
