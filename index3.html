@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>חידון מערכת העיכול המורחב</title>
+    <title>חידון מערכת העיכול - index3</title>
     <style>
-        /* העיצוב היפה שלך נשמר כאן */
+        /* העיצוב המקצועי שלך */
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%); min-height: 100vh; padding: 20px; direction: rtl; }
         .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         header { background: #1e8449; color: white; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 20px; }
-        .question-box { background: #f5576c; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; font-size: 22px; font-weight: bold; }
+        .question-box { background: #f5576c; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; font-size: 22px; font-weight: bold; min-height: 80px; display: flex; align-items: center; justify-content: center; }
         .image-container { position: relative; width: 100%; }
-        .image-container img { width: 100%; height: auto; border-radius: 8px; }
-        .organ-button { position: absolute; background: rgba(255, 255, 255, 0.2); border: 2px solid white; cursor: pointer; border-radius: 50%; transition: 0.3s; }
-        .organ-button:hover { background: rgba(52, 152, 219, 0.5); transform: scale(1.2); }
-        .feedback { text-align: center; font-size: 20px; margin: 15px 0; padding: 10px; border-radius: 8px; display: none; }
-        .correct { background: #d4edda; color: #155724; display: block; }
-        .incorrect { background: #f8d7da; color: #721c24; display: block; }
+        .image-container img { width: 100%; height: auto; border-radius: 8px; display: block; }
+        .organ-button { position: absolute; background: rgba(255, 255, 255, 0.1); border: 2px solid transparent; cursor: pointer; border-radius: 50%; transition: 0.3s; }
+        .organ-button:hover { background: rgba(52, 152, 219, 0.4); border-color: white; transform: scale(1.2); }
+        .feedback { text-align: center; font-size: 20px; margin: 15px 0; padding: 10px; border-radius: 8px; display: none; font-weight: bold; }
+        .correct-feed { background: #d4edda; color: #155724; display: block; border: 2px solid #c3e6cb; }
+        .incorrect-feed { background: #f8d7da; color: #721c24; display: block; border: 2px solid #f5c6cb; }
     </style>
 </head>
 <body>
@@ -26,49 +26,48 @@
             <p>עריכה: מילכה ברקו גרש</p>
         </header>
 
-        <div id="scoreDisplay" style="text-align: center; font-weight: bold; margin-bottom: 10px;"></div>
+        <div id="scoreDisplay" style="text-align: center; font-weight: bold; margin-bottom: 10px; color: #2c3e50;"></div>
         
         <div class="question-box" id="questionText">טוען שאלה...</div>
         <div id="feedback" class="feedback"></div>
 
         <div class="image-container" id="imageContainer">
             <img src="digestive_system.png" alt="מערכת העיכול">
-        </div>
+            </div>
     </div>
 
     <script>
-        // שאלות מעודכנות לפי התמונה וכרטיסיות המידע שלך
         const questions = [
-            { q: "איזה איבר כולל שיניים, לשון ובלוטות רוק ובו מתחיל העיכול המכני והכימי?", answer: "פה" },
+            { q: "איזה איבר מהווה פתח לקליטת מזון ומים ובו מתחיל תהליך העיכול המכני והכימי?", answer: "פה" },
             { q: "איזה איבר מפריש רוק המכיל אנזימים לפירוק פחמימות?", answer: "בלוטות רוק" },
-            { q: "איזה איבר שרירי עוזר בערבוב המזון ובבליעה?", answer: "לשון" },
-            { q: "איזה איבר עובר בשלושה מדורים: צוואר, חזה ובטן?", answer: "ושט" },
-            { q: "איזה איבר אוגר גליקוגן, מייצר חלבונים ומנטרל רעלים?", answer: "כבד" },
-            { q: "איזה איבר אוגר את נוזל המרה ומנטרל חומציות?", answer: "כיס מרה" },
-            { q: "איזה איבר מבצע פירוק ראשוני של חלבונים ושומנים ע\"י הפרשת חומצה?", answer: "קיבה" },
+            { q: "איזה איבר שרירי עוזר בערבוב המזון, בליעה ודיבור?", answer: "לשון" },
+            { q: "איזה איבר הוא צינור שרירי המעביר מזון אל הקיבה ועובר בצוואר, בחזה ובבטן?", answer: "ושט" },
+            { q: "מיהו האיבר הפנימי הגדול ביותר שאוגר גליקוגן ומנטרל רעלים?", answer: "כבד" },
+            { q: "איזה איבר אוגר את נוזל המרה ומנטרל חומציות לפני שהיא מגיעה למעי?", answer: "כיס מרה" },
+            { q: "איזה איבר מבצע פירוק ראשוני של חלבונים ושומנים ע\"י הפרשת חומצה ואנזימים?", answer: "קיבה" },
             { q: "באיזה חלק ראשון של המעי הדק מתבצע פירוק של כל אבות המזון?", answer: "תריסריון" },
-            { q: "איזה איבר מפריש אינסולין לדם ומיצי עיכול למעי?", answer: "לבלב" },
-            { q: "איפה מתבצע עיקר תהליך ספיגת חומרי המזון?", answer: "מעי דק" },
-            { q: "איזה איבר סופג מים ומלחים ולוכד שאריות מזון?", answer: "מעי גס" },
+            { q: "איזה איבר אחראי על הפרשת מיצי עיכול וגם הורמונים כמו אינסולין?", answer: "לבלב" },
+            { q: "היכן מתבצע עיקר התהליך של ספיגת חומרי המזון בגוף?", answer: "מעי דק" },
+            { q: "איזה איבר סופג שאריות מים ומלחים ולוכד שאריות מזון?", answer: "מעי גס" },
             { q: "איזה איבר משמש לאגירת הפסולת (הצואה) עד להפרשתה?", answer: "חלחולת" },
             { q: "מהו הפתח החיצוני המווסת את הפרשת הצואה מהגוף?", answer: "פי טבעת" }
         ];
 
-        // מיקומים מותאמים לתמונה שלך
+        // מיקומים מותאמים למפת האיברים שלך (אחוזים)
         const positions = {
-            "פה": { left: "46%", top: "15%", w: "6%", h: "4%" },
-            "בלוטות רוק": { left: "44%", top: "11%", w: "5%", h: "4%" },
-            "לשון": { left: "48%", top: "18%", w: "4%", h: "3%" },
-            "ושט": { left: "45%", top: "25%", w: "4%", h: "10%" },
-            "כבד": { left: "38%", top: "45%", w: "12%", h: "10%" },
-            "כיס מרה": { left: "41%", top: "54%", w: "4%", h: "4%" },
-            "קיבה": { left: "51%", top: "48%", w: "10%", h: "10%" },
-            "תריסריון": { left: "48%", top: "58%", w: "6%", h: "4%" },
-            "לבלב": { left: "48%", top: "54%", w: "8%", h: "4%" },
-            "מעי דק": { left: "47%", top: "68%", w: "10%", h: "12%" },
-            "מעי גס": { left: "40%", top: "65%", w: "20%", h: "15%" },
-            "חלחולת": { left: "48%", top: "82%", w: "5%", h: "5%" },
-            "פי טבעת": { left: "48%", top: "89%", w: "5%", h: "4%" }
+            "פה": { left: "46%", top: "15%", w: "8%", h: "5%" },
+            "בלוטות רוק": { left: "42%", top: "10%", w: "7%", h: "6%" },
+            "לשון": { left: "49%", top: "18%", w: "5%", h: "4%" },
+            "ושט": { left: "45%", top: "25%", w: "4%", h: "12%" },
+            "כבד": { left: "38%", top: "45%", w: "13%", h: "11%" },
+            "כיס מרה": { left: "41%", top: "55%", w: "5%", h: "5%" },
+            "קיבה": { left: "52%", top: "48%", w: "12%", h: "10%" },
+            "תריסריון": { left: "48%", top: "59%", w: "7%", h: "5%" },
+            "לבלב": { left: "49%", top: "54%", w: "9%", h: "5%" },
+            "מעי דק": { left: "46%", top: "68%", w: "12%", h: "15%" },
+            "מעי גס": { left: "40%", top: "65%", w: "22%", h: "18%" },
+            "חלחולת": { left: "48%", top: "83%", w: "6%", h: "6%" },
+            "פי טבעת": { left: "48%", top: "90%", w: "6%", h: "5%" }
         };
 
         let current = 0;
@@ -91,12 +90,13 @@
 
         function show() {
             if (current >= questions.length) {
-                document.getElementById('questionText').innerHTML = `סיימת! ציון: ${score}/${questions.length}`;
+                document.getElementById('questionText').innerHTML = `🎉 סיימת! הציון הסופי: ${score}/${questions.length}`;
+                document.getElementById('feedback').style.display = 'none';
                 return;
             }
             document.getElementById('questionText').textContent = questions[current].q;
             document.getElementById('scoreDisplay').textContent = `שאלה ${current + 1} מתוך ${questions.length} | ציון: ${score}`;
-            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('feedback').style.display = 'none';
         }
 
         function check(organ) {
@@ -104,16 +104,16 @@
             if (organ === questions[current].answer) {
                 score++;
                 feed.textContent = "✓ נכון מאוד!";
-                feed.className = "feedback correct";
+                feed.className = "feedback correct-feed";
             } else {
-                feed.textContent = "✗ לא נכון, התשובה היא " + questions[current].answer;
-                feed.className = "feedback incorrect";
+                feed.textContent = "✗ טעות. זהו ה-" + organ + ". התשובה הנכונה: " + questions[current].answer;
+                feed.className = "feedback incorrect-feed";
             }
             current++;
-            setTimeout(show, 1500);
+            setTimeout(show, 2000);
         }
 
-        init();
+        window.onload = init;
     </script>
 </body>
 </html>
