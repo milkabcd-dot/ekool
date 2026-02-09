@@ -3,111 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת העיכול - זיהוי איברים</title>
+    <title>מערכת העיכול - הקלדת מספרים</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 10px; direction: rtl; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 12px; padding: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        header h1 { font-size: 18px; color: #1e8449; text-align: center; margin: 5px; }
-        .instructions { background: #fff3cd; padding: 5px; border-radius: 6px; font-size: 14px; text-align: center; margin-bottom: 10px; font-weight: bold; }
-        .question-box { background: #f5576c; color: white; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 10px; font-size: 16px; min-height: 50px; display: flex; align-items: center; justify-content: center; }
-        .main-layout { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .image-container { position: relative; flex: 1; min-width: 300px; max-width: 450px; border: 1px solid #ccc; }
-        .image-container img { width: 100%; height: auto; display: block; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; margin: 0; padding: 10px; direction: rtl; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header h1 { font-size: 18px; color: #1e8449; text-align: center; margin-bottom: 5px; }
+        .instructions { background: #fff3cd; padding: 10px; border-radius: 8px; font-size: 14px; text-align: center; margin-bottom: 15px; border: 1px solid #ffeeba; font-weight: bold; }
+        
+        .question-box { background: #f5576c; color: white; padding: 12px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-size: 16px; font-weight: bold; }
 
-        /* עיגולים קטנים ומדויקים */
-        .number-target { 
-            position: absolute; background: rgba(0, 191, 255, 0.4); border: 2px solid #00bfff; 
-            border-radius: 50%; cursor: pointer; transform: translate(-50%, -50%);
-            width: 20px; height: 20px; transition: 0.2s;
+        .image-wrapper { position: relative; width: 100%; margin: 0 auto; }
+        .image-wrapper img { width: 100%; height: auto; display: block; border-radius: 5px; }
+
+        /* תיבות להקלדת המספר */
+        .number-input {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            border: 2px solid #00bfff;
+            border-radius: 4px;
+            font-weight: bold;
+            background: white;
+            z-index: 10;
         }
-        .number-target:hover { background: rgba(0, 191, 255, 0.8); }
+        .number-input.correct { background: #d4edda; border-color: #28a745; color: #155724; }
+        .number-input.wrong { background: #f8d7da; border-color: #dc3545; }
 
-        .table-container { flex: 1; min-width: 250px; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th, td { border: 1px solid #ddd; padding: 5px; text-align: center; }
-        .solved { background-color: #d4edda; font-weight: bold; }
-        .feedback { text-align: center; font-size: 16px; margin: 5px 0; padding: 8px; border-radius: 8px; display: none; }
-        .correct-feed { background: #d4edda; color: #155724; display: block; }
-        .incorrect-feed { background: #f8d7da; color: #721c24; display: block; }
+        .feedback { text-align: center; font-size: 16px; margin-top: 10px; font-weight: bold; min-height: 24px; }
+        .btn-check { display: block; width: 100%; padding: 10px; background: #185a9d; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <header><h1>מערכת העיכול - זיהוי</h1></header>
-        <div class="instructions">לחצו על העיגול התכלת שמעל המספר המתאים</div>
-        <div class="question-box" id="questionText">טוען...</div>
+        <header><h1>מערכת העיכול - התאמת מספרים</h1></header>
+        <div class="instructions">קראו את ההסבר בתיבה הורודה והקלידו את המספר המתאים לו בתיבה הכחולה הנכונה על התמונה</div>
+        
+        <div id="questionBox" class="question-box">טוען הסבר...</div>
+        
+        <div class="image-wrapper">
+            <img src="digestive_system.png" alt="מערכת העיכול">
+            
+            <input type="number" id="in-1" class="number-input" style="left: 5%; top: 12%;"> <input type="number" id="in-12" class="number-input" style="right: 5%; top: 15%;"> <input type="number" id="in-3" class="number-input" style="left: 5%; top: 23%;"> <input type="number" id="in-4" class="number-input" style="left: 5%; top: 41%;"> <input type="number" id="in-5" class="number-input" style="right: 5%; top: 52%;"> <input type="number" id="in-6" class="number-input" style="left: 5%; top: 53%;"> <input type="number" id="in-7" class="number-input" style="left: 5%; top: 62%;"> <input type="number" id="in-8" class="number-input" style="right: 5%; top: 61%;"> <input type="number" id="in-9" class="number-input" style="right: 5%; top: 68%;"> <input type="number" id="in-11" class="number-input" style="left: 5%; top: 70%;"> <input type="number" id="in-14" class="number-input" style="left: 5%; top: 79%;"> <input type="number" id="in-10" class="number-input" style="right: 5%; top: 80%;"> <input type="number" id="in-13" class="number-input" style="left: 5%; top: 90%;"> </div>
+
         <div id="feedback" class="feedback"></div>
-        <div class="main-layout">
-            <div class="image-container" id="imageContainer">
-                <img src="digestive_system.png" alt="מערכת העיכול">
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead><tr><th>#</th><th>איבר</th><th>V</th></tr></thead>
-                    <tbody id="progressTable"></tbody>
-                </table>
-            </div>
-        </div>
+        <button class="btn-check" onclick="checkAnswer()">בדיקה</button>
     </div>
+
     <script>
-        const organs = [
-            { id: "1", name: "פה", q: "פתח לקליטת מזון ומים, בו מתחיל תהליך העיכול המכני והכימי." },
-            { id: "2", name: "בלוטות רוק", q: "מפרישות רוק המכיל אנזימים לפירוק ראשוני של פחמימות." },
-            { id: "3", name: "ושט", q: "צינור שרירי המעביר מזון אל הקיבה דרך הצוואר והחזה." },
-            { id: "4", name: "כבד", q: "האיבר הפנימי הגדול ביותר, מסנן דם ומנטרל רעלים." },
-            { id: "5", name: "קיבה", q: "איבר המבצע פירוק ראשוני של חלבונים ושומנים ע\"י חומצה." },
-            { id: "6", name: "כיס מרה", q: "אוגר את נוזל המרה ומנטרל חומציות לפני המעבר למעי." },
-            { id: "7", name: "תריסריון", q: "החלק הראשון של המעי הדק בו מתבצע פירוק כל אבות המזון." },
-            { id: "8", name: "לבלב", q: "מפריש מיצי עיכול למעי והורמונים כמו אינסולין לדם." },
-            { id: "9", name: "מעי גס", q: "סופג שאריות מים ומלחים ולוכד שאריות מזון." },
-            { id: "10", name: "חלחולת", q: "החלק הסופי של המעי הגס המשמש לאגירת הפסולת." },
-            { id: "11", name: "מעי דק", q: "האיבר בו מתבצע עיקר תהליך הספיגה של חומרי המזון." },
-            { id: "12", name: "לשון", q: "איבר שרירי העוזר בערבוב המזון ובבליעה." },
-            { id: "13", name: "פי טבעת", q: "הפתח החיצוני המווסת את הפרשת הצואה מהגוף." }
+        const tasks = [
+            { id: 1, name: "בלוטות רוק", q: "איבר המפריש נוזל המכיל אנזימים לפירוק פחמימות." },
+            { id: 12, name: "לשון", q: "איבר שרירי העוזר בערבוב המזון ובבליעה." },
+            { id: 3, name: "ושט", q: "צינור שרירי המעביר מזון אל הקיבה." },
+            { id: 4, name: "כבד", q: "האיבר הפנימי הגדול ביותר, אוגר גליקוגן ומנטרל רעלים." },
+            { id: 5, name: "קיבה", q: "איבר המבצע פירוק ראשוני של חלבונים ושומנים ע\"י חומצה." },
+            { id: 13, name: "פי טבעת", q: "הפתח החיצוני המווסת את הפרשת הצואה מהגוף." }
         ];
 
-        // מיקומים מעודכנים לפי הנקודות האדומות בתמונה שלך
-        const positions = {
-            "1": { x: "13%", y: "91%" }, "2": { x: "13%", y: "13%" }, "3": { x: "13%", y: "24%" },
-            "4": { x: "13%", y: "42%" }, "5": { x: "87%", y: "52%" }, "6": { x: "13%", y: "54%" },
-            "7": { x: "13%", y: "62%" }, "8": { x: "87%", y: "62%" }, "9": { x: "87%", y: "68%" },
-            "10": { x: "13%", y: "71%" }, "11": { x: "13%", y: "80%" }, "12": { x: "87%", y: "80%" },
-            "13": { x: "13%", y: "91%" }
-        };
+        let currentTask = 0;
 
-        let current = 0;
-        function init() {
-            const tableBody = document.getElementById('progressTable');
-            organs.forEach(org => {
-                const row = document.createElement('tr'); row.id = `row-${org.id}`;
-                row.innerHTML = `<td>${org.id}</td><td>${org.name}</td><td id="status-${org.id}">-</td>`;
-                tableBody.appendChild(row);
-            });
-            const container = document.getElementById('imageContainer');
-            for (let id in positions) {
-                const btn = document.createElement('div'); btn.className = 'number-target';
-                btn.style.left = positions[id].x; btn.style.top = positions[id].y;
-                btn.onclick = () => check(id); container.appendChild(btn);
+        function showTask() {
+            if (currentTask >= tasks.length) {
+                document.getElementById('questionBox').innerHTML = "כל הכבוד! סיימתם את הפעילות 🎉";
+                return;
             }
-            show();
+            document.getElementById('questionBox').textContent = tasks[currentTask].q;
+            document.getElementById('feedback').textContent = "";
         }
-        function show() {
-            if (current >= organs.length) { document.getElementById('questionText').innerHTML = "🎉 סיימת!"; return; }
-            document.getElementById('questionText').textContent = organs[current].q;
-            document.getElementById('feedback').style.display = 'none';
-        }
-        function check(clickedId) {
-            const feed = document.getElementById('feedback');
-            if (clickedId === organs[current].id) {
-                feed.innerHTML = `✓ נכון! זה ${organs[current].name}`; feed.className = "feedback correct-feed";
-                document.getElementById(`row-${clickedId}`).className = "solved";
-                document.getElementById(`status-${clickedId}`).textContent = "V";
-                current++; setTimeout(show, 1500);
+
+        function checkAnswer() {
+            const activeTask = tasks[currentTask];
+            const inputField = document.getElementById('in-' + activeTask.id);
+            const val = inputField.value;
+
+            if (parseInt(val) === activeTask.id) {
+                inputField.classList.add('correct');
+                inputField.disabled = true;
+                document.getElementById('feedback').style.color = "green";
+                document.getElementById('feedback').textContent = "נכון! זהו ה" + activeTask.name;
+                currentTask++;
+                setTimeout(showTask, 2000);
             } else {
-                feed.innerHTML = "✗ נסו שוב"; feed.className = "feedback incorrect-feed";
+                document.getElementById('feedback').style.color = "red";
+                document.getElementById('feedback').textContent = "לא נכון, נסו שוב.";
+                inputField.classList.add('wrong');
+                setTimeout(() => inputField.classList.remove('wrong'), 500);
             }
         }
-        window.onload = init;
+
+        window.onload = showTask;
     </script>
 </body>
 </html>
